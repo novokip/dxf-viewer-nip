@@ -63,6 +63,7 @@ export declare class DxfViewer {
     GetScene(): THREE.Scene
     HasRenderer(): boolean
     Load(params: DxfViewerLoadParams): Promise<void>
+    Redraw(): void
     Render(): void
     SetSize(width: number, height: number): void
     SetView(center: THREE.Vector3, width: number): void

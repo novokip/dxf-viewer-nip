@@ -181,6 +181,7 @@ export class DxfViewer {
         this.worker = null
         this.parsedDxf = dxf
 
+        this.sceneBatches = scene
         this.origin = scene.origin
         this.bounds = scene.bounds
         this.hasMissingChars = scene.hasMissingChars
@@ -229,6 +230,64 @@ export class DxfViewer {
         if (this.hasMissingChars) {
             this._Message("Some characters cannot be properly displayed due to missing fonts",
                           MessageLevel.WARN)
+        }
+
+        this._CreateControls()
+        this.Render()
+    }
+
+    Redraw() {
+
+        this._EnsureRenderer()
+
+        this.Clear()
+
+
+
+        for (const layer of this.sceneBatches.layers) {
+            this.layers.set(layer.name, new Layer(layer.name, layer.displayName, layer.color))
+        }
+
+        /* Load all blocks on the first pass. */
+        for (const batch of this.sceneBatches.batches) {
+            if (batch.key.blockName !== null &&
+                batch.key.geometryType !== BatchingKey.GeometryType.BLOCK_INSTANCE &&
+                batch.key.geometryType !== BatchingKey.GeometryType.POINT_INSTANCE) {
+
+                let block = this.blocks.get(batch.key.blockName)
+                if (!block) {
+                    block = new Block()
+                    this.blocks.set(batch.key.blockName, block)
+                }
+                block.PushBatch(new Batch(this, this.sceneBatches, batch))
+            }
+        }
+
+        console.log(`DXF scene:
+                     ${this.sceneBatches.batches.length} batches,
+                     ${this.layers.size} layers,
+                     ${this.blocks.size} blocks,
+                     vertices ${this.sceneBatches.vertices.byteLength} B,
+                     indices ${this.sceneBatches.indices.byteLength} B
+                     transforms ${this.sceneBatches.transforms.byteLength} B`)
+
+        /* Instantiate all entities. */
+        for (const batch of this.sceneBatches.batches) {
+            this._LoadBatch(this.sceneBatches, batch)
+        }
+
+        this._Emit("loaded")
+
+        if (this.sceneBatches.bounds) {
+            this.FitView(this.sceneBatches.bounds.minX - this.sceneBatches.origin.x, this.sceneBatches.bounds.maxX - this.sceneBatches.origin.x,
+                this.sceneBatches.bounds.minY - this.sceneBatches.origin.y, this.sceneBatches.bounds.maxY - this.sceneBatches.origin.y)
+        } else {
+            this._Message("Empty document", MessageLevel.WARN)
+        }
+
+        if (this.hasMissingChars) {
+            this._Message("Some characters cannot be properly displayed due to missing fonts",
+                MessageLevel.WARN)
         }
 
         this._CreateControls()

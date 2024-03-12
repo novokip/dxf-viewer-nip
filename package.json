@@ -2,9 +2,7 @@
     "name": "dxf-viewer",
     "version": "1.0.31",
     "description": "JavaScript DXF file viewer",
-    "main": "dist/dxf-viewer.js",
-    "types": "dist/src/index.d.ts",
-    "module": "dist/dxf-viewer.js",
+    "main": "src/index.js",
     "prepublish": "npm run build",
     "scripts": {
         "devHtmlTest": "webpack serve --env development --config webpack.config.js",

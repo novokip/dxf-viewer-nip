@@ -18,7 +18,7 @@ module.exports = ({ development }) => ({
     output: {
         filename: 'dxf-viewer.js',
         path: path.resolve(__dirname, development ? 'devDist' : 'dist'),
-        library: 'dxf-viewer',
+        library: 'dxfViewer',
         libraryExport: 'default',
         libraryTarget: 'umd',
         umdNamedDefine: true,
@@ -26,7 +26,7 @@ module.exports = ({ development }) => ({
         clean: true,
     },
     resolve: {
-        extensions: ['.ts','.js','.html'],
+        extensions: ['.ts','.js'],
     },
     module: {
         rules: [

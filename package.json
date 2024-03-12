@@ -3,7 +3,6 @@
     "version": "1.0.31",
     "description": "JavaScript DXF file viewer",
     "main": "src/index.js",
-    "prepublish": "npm run build",
     "scripts": {
         "devHtmlTest": "webpack serve --env development --config webpack.config.js",
         "dev": "webpack --env development --watch",

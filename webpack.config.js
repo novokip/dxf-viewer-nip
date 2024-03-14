@@ -9,7 +9,7 @@ const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = ({ development }) => ({
-    entry: development ?'./src/indexDev.ts':'./src/index.ts',
+    entry: development ?'./src/indexDev.ts':'./src/indexNew.ts',
     devtool: development ? 'inline-source-map' : false,
     optimization: {
         minimize: development ? false :true ,

@@ -32,13 +32,13 @@ export class DxfWorker {
      * @param options Viewer options. See DxfViewer.DefaultOptions.
      * @param progressCbk {Function?} (phase, processedSize, totalSize)
      */
-    async Load(url, fonts, options, progressCbk) {
+    async Load(url, fonts, options, progressCbk,props) {
         if (this.worker) {
             return this._SendRequest(DxfWorker.WorkerMsg.LOAD,
                                      { url, fonts, options: this._CloneOptions(options) },
                                      progressCbk)
         } else {
-            return this._Load(url, fonts, options, progressCbk)
+            return this._Load(url, fonts, options, progressCbk,props)
         }
     }
 
@@ -144,14 +144,14 @@ export class DxfWorker {
     }
 
     /** @return {Object} DxfScene serialized scene. */
-    async _Load(url, fonts, options, progressCbk) {
+    async _Load(url, fonts, options, progressCbk,props) {
         let fontFetchers
         if (fonts) {
             fontFetchers = this._CreateFontFetchers(fonts, progressCbk)
         } else {
             fontFetchers = []
         }
-        const dxf = await new DxfFetcher(url, options.fileEncoding).Fetch(progressCbk)
+        const dxf = await new DxfFetcher(url, options.fileEncoding,props).Fetch(progressCbk)
         if (progressCbk) {
             progressCbk("prepare", 0, null)
         }

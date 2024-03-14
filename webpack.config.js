@@ -17,7 +17,7 @@ module.exports = ({ development }) => ({
     mode: development ? 'development' : 'production',
     output: {
         filename: 'dxf-viewer.js',
-        path: path.resolve(__dirname, development ? 'devDist' : 'dist'),
+        path: path.resolve(__dirname, 'dist'),
         library: 'dxfViewer',
         libraryExport: 'default',
         libraryTarget: 'umd',
@@ -52,7 +52,7 @@ module.exports = ({ development }) => ({
         stats: 'errors-only',
         devServer: {
             static: {
-                directory: path.join(__dirname,  development ? 'devDist' : 'dist'), // Каталог для статики
+                directory: path.join(__dirname,   'dist'), // Каталог для статики
             },
             open: true, // Автоматически открывать браузер
         }

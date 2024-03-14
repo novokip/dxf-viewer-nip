@@ -2,9 +2,10 @@ import DxfParser from "./parser/DxfParser"
 
 /** Fetches and parses DXF file. */
 export class DxfFetcher {
-    constructor(url, encoding = "utf-8") {
+    constructor(url, encoding = "utf-8",props) {
         this.url = url
         this.encoding = encoding
+        this.props = props
     }
 
     /** @param progressCbk {Function} (phase, receivedSize, totalSize) */
@@ -35,6 +36,6 @@ export class DxfFetcher {
             progressCbk("parse", 0, null)
         }
         const parser = new DxfParser()
-        return parser.parseSync(buffer)
+        return parser.parseSync(buffer,this.props)
     }
 }

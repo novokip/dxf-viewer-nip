@@ -67,9 +67,9 @@ DxfParser.prototype.registerEntityHandler = function(handlerType) {
     this._entityHandlers[handlerType.ForEntityName] = instance;
 }
 
-DxfParser.prototype.parseSync = function(source) {
+DxfParser.prototype.parseSync = function(source,props) {
     if(typeof(source) === 'string') {
-        return this._parse(source);
+        return this._parse(source,props);
     }else {
         console.error('Cannot read DXF source of type `' + typeof(source));
         return null;
@@ -103,7 +103,7 @@ DxfParser.prototype.parseStream = function(stream, done) {
     }
 };
 
-DxfParser.prototype._parse = function(dxfString) {
+DxfParser.prototype._parse = function(dxfString,props) {
     var scanner, curr, dxf = {}, lastHandle = 0;
     var dxfLinesArray = dxfString.split(/\r\n|\r|\n/g);
 
@@ -114,7 +114,7 @@ DxfParser.prototype._parse = function(dxfString) {
 
     var self = this;
 
-    var parseAll = function() {
+    var parseAll = function(props) {
         curr = scanner.next();
         while(!scanner.isEOF()) {
             if(curr.code === 0 && curr.value === 'SECTION') {
@@ -137,7 +137,7 @@ DxfParser.prototype._parse = function(dxfString) {
                     log.debug('<');
                 } else if(curr.value === 'ENTITIES') {
                     log.debug('> ENTITIES');
-                    dxf.entities = parseEntities(false);
+                    dxf.entities = parseEntities(false,props);
                     log.debug('<');
                 } else if(curr.value === 'TABLES') {
                     log.debug('> TABLES');
@@ -800,7 +800,7 @@ DxfParser.prototype._parse = function(dxfString) {
      * should be on the start of the first entity already.
      * @return {Array} the resulting entities
      */
-    var parseEntities = function(forBlock) {
+    var parseEntities = function(forBlock,props) {
         var entities = [];
 
         var endingOnValue = forBlock ? 'ENDBLK' : 'ENDSEC';
@@ -826,6 +826,9 @@ DxfParser.prototype._parse = function(dxfString) {
                     log.warn('Unhandled entity ' + curr.value);
                     curr = scanner.next();
                     continue;
+                }
+                if (props?.filterTags && props.filterTags.length>0 &&  props.filterTags.indexOf(entity?.tag)>-1){
+                    entity.text="";
                 }
                 ensureHandle(entity);
                 entities.push(entity);
@@ -882,7 +885,7 @@ DxfParser.prototype._parse = function(dxfString) {
         }
     }
 
-    parseAll();
+    parseAll(props);
     return dxf;
 };
 

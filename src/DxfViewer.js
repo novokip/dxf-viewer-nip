@@ -166,7 +166,7 @@ export class DxfViewer {
      * @param workerFactory {?Function} Factory for worker creation. The worker script should
      *  invoke DxfViewer.SetupWorker() function.
      */
-    async Load({url, fonts = null, progressCbk = null, workerFactory = null}) {
+    async Load({url, fonts = null, progressCbk = null, workerFactory = null,props=null}) {
         if (url === null || url === undefined) {
             throw new Error("`url` parameter is not specified")
         }
@@ -176,7 +176,7 @@ export class DxfViewer {
         this.Clear()
 
         this.worker = new DxfWorker(workerFactory ? workerFactory() : null)
-        const {scene, dxf} = await this.worker.Load(url, fonts, this.options, progressCbk)
+        const {scene, dxf} = await this.worker.Load(url, fonts, this.options, progressCbk,props)
         await this.worker.Destroy()
         this.worker = null
         this.parsedDxf = dxf

@@ -41,7 +41,8 @@ if (fileInput){
             fonts: [mainFont],
             url: dxfUrl,
             progressCbk: progress,
-            workerFactory: null
+            workerFactory: null,
+            props:{ filterTags:["SN"] }
         });
 
     }

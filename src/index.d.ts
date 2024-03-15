@@ -31,13 +31,16 @@ export type DxfViewerOptions = {
     preserveDrawingBuffer: boolean,
     fileEncoding: string
 }
-
+export interface AdditionalProps  {
+    filterTags?:string[]
+}
 export type DxfViewerLoadParams = {
     url: string,
     fonts: string[] | null,
     progressCbk: ((phase: "font" | "fetch" | "parse" | "prepare",
                    processedSize: number, totalSize: number) => void) | null,
-    workerFactory: (() => Worker) | null
+    workerFactory: (() => Worker) | null,
+    props?:AdditionalProps
 }
 
 export type LayerInfo = {

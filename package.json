@@ -11,7 +11,7 @@
     },
     "author": "Artyom Lebedev<artyom.lebedev@gmail.com>",
     "license": "MPL-2.0",
-    "repository": "https://github.com/vagran/dxf-viewer",
+    "repository": "https://github.com/novokip/dxf-viewer-nip",
     "keywords": [
         "dxf",
         "viewer",
